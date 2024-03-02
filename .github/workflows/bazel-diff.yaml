@@ -35,5 +35,5 @@ jobs:
 
       - name: Compute impacted targets
         run: |
-          bazel run //bazel/diff -- get-impacted-targets -sh ${{ runner.temp }}/base-hashes.json -fh ${{ runner.temp }}/current-hashes.json -o ${{ runner.temp }}/impacted-targets.txt
+          bazel run //bazel/diff -- get-impacted-targets -sh ${{ runner.temp }}/base-hashes.json -fh ${{ runner.temp }}/current-hashes.json -o ${{ runner.temp }}/impacted-targets.txt --verbose
           cat ${{ runner.temp }}/impacted-targets.txt
