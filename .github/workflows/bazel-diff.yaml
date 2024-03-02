@@ -17,6 +17,7 @@ jobs:
         run: |
           ls -la ${{ runner.temp }}
           mkdir -p ${{ runner.temp }}/old
+          git fetch --all
           git worktree add ${{ runner.temp }}/old master
           ls -la ${{ runner.temp }}/old
       - name: Compute bazel-diff
