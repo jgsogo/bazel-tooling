@@ -13,6 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: tmp folder
+        run: |
+          ls -la ${{ runner.temp }}
+          mkdir -p ${{ runner.temp }}/old
+          git worktree add ${{ runner.temp }}/old master
+          ls -la ${{ runner.temp }}/old
       - name: Compute bazel-diff
         run: |
           bazel run //bazel/diff generate-hashes -- -w $(pwd) $(pwd)/out.json
