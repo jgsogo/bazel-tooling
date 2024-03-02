@@ -1,8 +1,9 @@
-name: Buildifier
+name: bazel-diff
 
 # Controls when the action will run.
 on:
   push:
+    branches: [main]
   pull_request:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
