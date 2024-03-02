@@ -17,7 +17,7 @@ jobs:
       - name: Base from base branch (PR)
         if: needs.pr-check.outputs.number == null
         run: |
-          echo "I'm a PR to base ${{ github.event.pull_request.base.ref }}"
+          echo "I'm a PR to base '${{ github.event.pull_request.base.ref }}'"
           git fetch origin ${{ github.event.pull_request.base.ref }}
           git worktree add ${{ runner.temp }}/base ${{ github.event.pull_request.base.ref }}
 
@@ -27,14 +27,13 @@ jobs:
           echo "I'm NOT a PR"
           git worktree add ${{ runner.temp }}/base HEAD~1
 
-      # - name: Compute
-      #   run: |
-      #     ls -la ${{ runner.temp }}
-      #     mkdir -p ${{ runner.temp }}/old
-      #     git fetch --all
-      #     git worktree add ${{ runner.temp }}/old master
-      #     ls -la ${{ runner.temp }}/old
-      - name: Compute bazel-diff
+      - name: Generate hashes from base
+        run: bazel run //bazel/diff generate-hashes -- -w ${{ runner.temp }}/base ${{ runner.temp }}/base-hashes.json
+
+      - name: Generate hashes from current
+        run: bazel run //bazel/diff generate-hashes -- -w ${{ runner.temp }}/base ${{ runner.temp }}/current-hashes.json
+
+      - name: Compute impacted targets
         run: |
-          bazel run //bazel/diff generate-hashes -- -w $(pwd) $(pwd)/out.json
-          cat $(pwd)/out.json
+          bazel run //bazel/diff get-impacted-targets -sh ${{ runner.temp }}/base-hashes.json -fh ${{ runner.temp }}/current-hashes.json -o ${{ runner.temp }}/impacted-targets.txt
+          cat ${{ runner.temp }}/impacted-targets.txt
