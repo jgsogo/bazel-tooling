@@ -1,0 +1,3 @@
+# Bazel specific
+bazel-*
+.bazelrc.user
