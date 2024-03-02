@@ -28,14 +28,10 @@ jobs:
           git worktree add ${{ runner.temp }}/base HEAD~1
 
       - name: Generate hashes from base
-        run: |
-          bazel run //bazel/diff -- generate-hashes -w ${{ runner.temp }}/base ${{ runner.temp }}/base-hashes.json
-          cat ${{ runner.temp }}/base-hashes.json
+        run: bazel run //bazel/diff -- generate-hashes -w ${{ runner.temp }}/base ${{ runner.temp }}/base-hashes.json
 
       - name: Generate hashes from current
-        run: |
-          bazel run //bazel/diff -- generate-hashes -w . ${{ runner.temp }}/current-hashes.json
-          cat ${{ runner.temp }}/current-hashes.json
+        run: bazel run //bazel/diff -- generate-hashes -w ${{ github.workspace }} ${{ runner.temp }}/current-hashes.json
 
       - name: Compute impacted targets
         run: |
