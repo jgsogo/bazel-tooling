@@ -13,13 +13,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: tmp folder
+
+      - name: Base from PR
+        if: needs.pr-check.outputs.number != null
         run: |
-          ls -la ${{ runner.temp }}
-          mkdir -p ${{ runner.temp }}/old
-          git fetch --all
-          git worktree add ${{ runner.temp }}/old master
-          ls -la ${{ runner.temp }}/old
+          echo "I'm a PR to base ${{ github.event.pull_request.base.ref }}"
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          git worktree add ${{ runner.temp }}/base ${{ github.event.pull_request.base.ref }}
+
+      - name: Baseline prev commit
+        if: needs.pr-check.outputs.number == null
+        run: |
+          echo "I'm NOT a PR"
+          git worktree add ${{ runner.temp }}/base HEAD~1
+
+      # - name: Compute
+      #   run: |
+      #     ls -la ${{ runner.temp }}
+      #     mkdir -p ${{ runner.temp }}/old
+      #     git fetch --all
+      #     git worktree add ${{ runner.temp }}/old master
+      #     ls -la ${{ runner.temp }}/old
       - name: Compute bazel-diff
         run: |
           bazel run //bazel/diff generate-hashes -- -w $(pwd) $(pwd)/out.json
