@@ -1,0 +1,18 @@
+name: Buildifier
+
+# Controls when the action will run.
+on:
+  push:
+  pull_request:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compute bazel-diff
+        run: |
+          bazel run //bazel/diff generate-hashes -- -w $(pwd) $(pwd)/out.json
+          cat $(pwd)/out.json
