@@ -7,7 +7,7 @@ module(
 bazel_dep(name = "bazel_skylib", version = "1.4.1")
 bazel_dep(name = "platforms", version = "0.0.5")
 
-bazel_dep(name = "aspect_bazel_lib", version = "1.32.1", dev_dependency = True)
+bazel_dep(name = "aspect_bazel_lib", version = "1.40.2", dev_dependency = True)
 bazel_dep(name = "buildifier_prebuilt", version = "6.1.2", dev_dependency = True)
 
 http_jar = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_jar")
