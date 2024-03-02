@@ -14,15 +14,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Base from PR
-        if: needs.pr-check.outputs.number != null
+      - name: Base from base branch (PR)
+        if: needs.pr-check.outputs.number == null
         run: |
           echo "I'm a PR to base ${{ github.event.pull_request.base.ref }}"
           git fetch origin ${{ github.event.pull_request.base.ref }}
           git worktree add ${{ runner.temp }}/base ${{ github.event.pull_request.base.ref }}
 
-      - name: Baseline prev commit
-        if: needs.pr-check.outputs.number == null
+      - name: Base from previous commit (not PR)
+        if: needs.pr-check.outputs.number != null
         run: |
           echo "I'm NOT a PR"
           git worktree add ${{ runner.temp }}/base HEAD~1
